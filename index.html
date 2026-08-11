@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Aronya — Kendi Bahçemizden</title>
+<meta name="description" content="Kendi bahçemizde yetişen aronya meyvesi. 100 g'dan 5 kg'a paketler. Beğendiğiniz pakete dokunun, WhatsApp'tan sipariş verin.">
+<meta name="theme-color" content="#1A0720">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Aronya — Kendi Bahçemizden">
+<meta property="og:description" content="Kendi bahçemizde yetişen aronya meyvesi. 100 g'dan 5 kg'a paketler.">
+<meta property="og:image" content="gorseller/hero.jpg">
+</head>
+<body>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   AYARLAR  —  Sadece bu bölümü düzenleyin.
+   ═══════════════════════════════════════════════════════════════ */
+const AYARLAR = {
+
+  // WhatsApp numarası: ülke kodu ile, başında + veya 0 olmadan.
+  whatsapp: "905319489031",
+
+  instagram: "aronya_aronia",
+
+  // ⬇️ Fiyatları yazınca true yapın; false iken "Fiyat için sorun" görünür.
+  fiyatlariGoster: true,
+
+  // ⬇️ PAKETLER. not alanı boş bırakılabilir.
+  paketler: [
+    { agirlik: "100 g", not: "", fiyat: "100 TL"  },
+    { agirlik: "1 kg",  not: "", fiyat: "400 TL"  },
+    { agirlik: "2 kg",  not: "", fiyat: "700 TL"  },
+    { agirlik: "4 kg",  not: "", fiyat: "1200 TL" },
+    { agirlik: "5 kg",  not: "", fiyat: "1500 TL" }
+  ],
+
+  // WhatsApp'a giden hazır mesaj. {paket} = ağırlık, {fiyat} = fiyat.
+  // Fiyat görünürken siparişMesaji, gizliyken mesaj kullanılır.
+  siparisMesaji: "Merhaba, Instagram sayfanızdan geliyorum. {paket} taze aronya ({fiyat}) sipariş etmek istiyorum.",
+  mesaj: "Merhaba, Instagram sayfanızdan geliyorum. {paket} taze aronya için fiyat ve sipariş bilgisi almak istiyorum.",
+  genelMesaj: "Merhaba, Instagram sayfanızdan geliyorum. Taze aronya siparişi hakkında bilgi almak istiyorum."
+};
+/* ══════════ AYARLAR BİTTİ — aşağısını değiştirmenize gerek yok ══════════ */
+</script>
+
+<style>
+/* ── Renk sistemi: meyvenin ve bahçenin kendisinden ───────────
+   mor = meyve eti / marka moru · pus = kabuktaki mat lavanta
+   yaprak = aronya yaprağının zeytin yeşili                     */
+:root{
+  --zemin:      #F4EEF0;
+  --zemin-alt:  #EDE4E8;
+  --kart:       #FCFAFB;
+  --murekkep:   #2B0F30;
+  --sessiz:     #6E5A6C;
+  --mor:        #4E1553;
+  --pus:        #A98CB8;
+  --yaprak:     #55682E;
+  --cizgi:      rgba(43,15,48,.13);
+  --golge:      0 1px 2px rgba(43,15,48,.05), 0 8px 24px -12px rgba(43,15,48,.22);
+  --wa:         #1EA35A;
+  --wa-koyu:    #158A4A;
+
+  --serif: ui-serif, "New York", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  --sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --zemin:#160819; --zemin-alt:#1E0C22; --kart:#231027;
+    --murekkep:#F1E7EF; --sessiz:#AE9BB0; --mor:#CFA3D8;
+    --pus:#C6AFD2; --yaprak:#9EB466; --cizgi:rgba(241,231,239,.15);
+    --golge: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --zemin:#160819; --zemin-alt:#1E0C22; --kart:#231027;
+  --murekkep:#F1E7EF; --sessiz:#AE9BB0; --mor:#CFA3D8;
+  --pus:#C6AFD2; --yaprak:#9EB466; --cizgi:rgba(241,231,239,.15);
+  --golge: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
+}
+:root[data-theme="light"]{
+  --zemin:#F4EEF0; --zemin-alt:#EDE4E8; --kart:#FCFAFB;
+  --murekkep:#2B0F30; --sessiz:#6E5A6C; --mor:#4E1553;
+  --pus:#A98CB8; --yaprak:#55682E; --cizgi:rgba(43,15,48,.13);
+  --golge: 0 1px 2px rgba(43,15,48,.05), 0 8px 24px -12px rgba(43,15,48,.22);
+}
+
+*{ box-sizing:border-box; }
+body{ margin:0; background:var(--zemin-alt); font-family:var(--sans); }
+
+.sayfa{
+  max-width:470px; margin:0 auto; background:var(--zemin);
+  color:var(--murekkep); font-size:16px; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh; padding-bottom:100px;
+  box-shadow:0 0 60px rgba(43,15,48,.10);
+  overflow-x:hidden;
+}
+img,video{ max-width:100%; display:block; }
+a{ color:inherit; text-decoration:none; }
+:focus-visible{ outline:2px solid var(--pus); outline-offset:3px; border-radius:4px; }
+
+.uyari{ background:#8A1D1D; color:#fff; font-size:.8rem; padding:10px 18px; line-height:1.45; }
+.uyari code{ background:rgba(255,255,255,.2); padding:1px 5px; border-radius:4px; }
+
+/* ── Hero: bahçeden gerçek kare ─────────────────────────────── */
+.hero{
+  position:relative; color:#F6EDF3; text-align:center;
+  padding:52px 26px 44px; overflow:hidden; background:#1A0720;
+}
+/* z-index:0 şart: aşağıdaki ".hero > *" kuralı fotoğrafı da yakalayıp
+   karartma katmanının üstüne çıkarıyor, yazılar okunmaz hale geliyor. */
+.hero img{
+  position:absolute; inset:0; z-index:0; width:100%; height:100%; object-fit:cover;
+}
+.hero::before{
+  content:""; position:absolute; inset:0; z-index:1;
+  background:
+    radial-gradient(ellipse 80% 62% at 50% 50%, rgba(26,7,32,.38) 0%, rgba(26,7,32,.22) 60%, rgba(26,7,32,.06) 100%),
+    linear-gradient(to bottom, rgba(26,7,32,.44) 0%, rgba(26,7,32,.32) 45%, rgba(26,7,32,.5) 100%);
+}
+.hero::after{
+  content:""; position:absolute; inset:auto 0 -1px 0; height:86px; z-index:1;
+  background:linear-gradient(to bottom, rgba(26,7,32,0), var(--zemin) 92%);
+}
+.hero > *{ position:relative; z-index:2; }
+
+.ustluk{
+  font-size:.63rem; letter-spacing:.24em; text-transform:uppercase;
+  color:#E7D8EA; font-weight:600; margin:0 0 16px;
+  text-shadow:0 1px 8px rgba(20,5,24,.7);
+}
+.marka{
+  font-family:var(--serif); font-weight:400;
+  font-size:clamp(3.2rem,17vw,4.4rem); line-height:.92;
+  letter-spacing:-.025em; margin:0; text-wrap:balance;
+  text-shadow:0 2px 20px rgba(20,5,24,.6);
+}
+.latince{
+  font-family:var(--serif); font-style:italic; font-size:.9rem;
+  color:#DCC8DE; margin:10px 0 0; text-shadow:0 1px 10px rgba(20,5,24,.7);
+}
+.kural{ width:46px; height:1px; background:var(--pus); opacity:.6; margin:20px auto; border:0; }
+.giris{
+  margin:0 auto; max-width:31ch; font-size:.97rem; color:#EFE2EE;
+  text-shadow:0 1px 12px rgba(20,5,24,.8);
+}
+.rozetler{ display:flex; flex-wrap:wrap; justify-content:center; gap:7px; margin-top:22px; }
+.rozet{
+  font-size:.7rem; padding:5px 11px; border-radius:999px; color:#F0E4F0;
+  border:1px solid rgba(230,215,235,.45); background:rgba(26,7,32,.35);
+  backdrop-filter:blur(2px);
+}
+
+/* ── Bölüm başlıkları ───────────────────────────────────────── */
+.bolum{ padding:34px 22px 0; }
+.etiket{
+  font-size:.63rem; letter-spacing:.22em; text-transform:uppercase;
+  color:var(--yaprak); font-weight:700; margin:0 0 8px;
+}
+.baslik{
+  font-family:var(--serif); font-weight:400; letter-spacing:-.015em;
+  font-size:clamp(1.65rem,6.5vw,2rem); line-height:1.15; margin:0; text-wrap:balance;
+}
+.altyazi{ color:var(--sessiz); font-size:.93rem; margin:9px 0 0; }
+
+/* ── Ürün kartı ─────────────────────────────────────────────── */
+.urun{
+  margin:20px 22px 0; border-radius:20px; overflow:hidden;
+  background:var(--kart); border:1px solid var(--cizgi); box-shadow:var(--golge);
+}
+.urun img{ width:100%; aspect-ratio:4/3; object-fit:cover; }
+.urunGovde{ padding:16px 18px 18px; }
+.urunGovde h3{ font-family:var(--serif); font-weight:400; font-size:1.35rem; margin:0; letter-spacing:-.015em; }
+.urunGovde p{ font-size:.9rem; color:var(--sessiz); margin:8px 0 0; }
+
+/* ── Paket satırları ────────────────────────────────────────── */
+.paketler{ display:flex; flex-direction:column; gap:10px; padding:18px 22px 0; }
+.paket{
+  display:flex; align-items:center; gap:14px;
+  background:var(--kart); border:1px solid var(--cizgi); border-radius:16px;
+  padding:14px 15px; box-shadow:var(--golge);
+  transition:transform .16s ease, border-color .16s ease, box-shadow .16s ease;
+}
+.paket:active{ transform:scale(.985); }
+@media (hover:hover){
+  .paket:hover{ border-color:var(--pus); box-shadow:0 2px 4px rgba(43,15,48,.06), 0 16px 34px -16px rgba(78,21,83,.4); }
+}
+.agirlik{
+  flex:0 0 74px; font-family:var(--serif); font-size:1.5rem; line-height:1;
+  letter-spacing:-.02em; font-variant-numeric:tabular-nums; color:var(--mor);
+}
+:root[data-theme="dark"] .agirlik{ color:var(--pus); }
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .agirlik{ color:var(--pus); } }
+.paketGovde{ flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+.paketNot{ font-size:.87rem; color:var(--sessiz); line-height:1.35; }
+.paketFiyat{ font-size:1.05rem; font-weight:650; font-variant-numeric:tabular-nums; letter-spacing:-.01em; }
+.sor{
+  flex:0 0 auto; display:inline-flex; align-items:center; gap:6px;
+  background:var(--mor); color:#fff; font-size:.79rem; font-weight:600;
+  padding:9px 13px; border-radius:999px; white-space:nowrap;
+}
+:root[data-theme="dark"] .sor{ color:#1A0720; }
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .sor{ color:#1A0720; } }
+.sor svg{ width:14px; height:14px; fill:currentColor; }
+
+/* ── Bahçe şeridi: kendi kendine dönen galeri ───────────────── */
+.serit{
+  display:flex; gap:10px; padding:18px 22px 0;
+  overflow-x:auto; scroll-snap-type:x mandatory;
+  scrollbar-width:none; -webkit-overflow-scrolling:touch;
+}
+.serit::-webkit-scrollbar{ display:none; }
+.serit > *{
+  flex:0 0 78%; scroll-snap-align:center; border-radius:18px; overflow:hidden;
+  aspect-ratio:4/5; background:#1A0720; box-shadow:var(--golge);
+}
+.serit img, .serit video{ width:100%; height:100%; object-fit:cover; }
+
+.noktalar{ display:flex; justify-content:center; gap:7px; padding:14px 22px 0; }
+.nokta{
+  width:7px; height:7px; padding:0; border:0; border-radius:50%; cursor:pointer;
+  background:var(--cizgi); transition:background .25s, transform .25s;
+}
+.nokta[aria-current="true"]{ background:var(--mor); transform:scale(1.35); }
+:root[data-theme="dark"] .nokta[aria-current="true"]{ background:var(--pus); }
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .nokta[aria-current="true"]{ background:var(--pus); }
+}
+
+/* ── Ölçümler: kahraman sayı + iki destekçi ─────────────────── */
+.olcumler{ display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:18px 0 0; }
+.olcum{
+  background:var(--kart); border:1px solid var(--cizgi); border-radius:16px;
+  padding:15px 16px; box-shadow:var(--golge);
+}
+.olcum.genis{ grid-column:1 / -1; }
+.sayi{
+  font-family:var(--serif); font-weight:400; color:var(--mor);
+  font-size:1.85rem; line-height:1.05; letter-spacing:-.02em;
+  font-variant-numeric:tabular-nums; display:block;
+}
+.olcum.genis .sayi{ font-size:2.3rem; }
+:root[data-theme="dark"] .sayi{ color:var(--pus); }
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .sayi{ color:var(--pus); } }
+.olcumEtiket{
+  display:block; margin-top:6px; font-size:.75rem; line-height:1.35; color:var(--sessiz);
+}
+.kaynak{
+  font-size:.72rem; color:var(--sessiz); opacity:.85; margin:12px 0 0; line-height:1.5;
+}
+
+/* ── Tat notu ───────────────────────────────────────────────── */
+.tat{
+  margin-top:16px; padding:16px 18px; border-radius:16px;
+  background:var(--zemin-alt); border:1px solid var(--cizgi);
+}
+.tat h3{ font-family:var(--serif); font-weight:400; font-size:1.1rem; margin:0 0 6px; }
+.tat p{ margin:0; font-size:.87rem; color:var(--sessiz); line-height:1.55; }
+
+/* ── Nasıl tüketilir ────────────────────────────────────────── */
+.yollar{ display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:18px 0 0; }
+.yol{ background:var(--kart); border:1px solid var(--cizgi); border-radius:14px; padding:13px 14px; }
+.yol h3{ font-family:var(--serif); font-weight:400; font-size:1rem; margin:0 0 4px; }
+.yol p{ margin:0; font-size:.8rem; color:var(--sessiz); line-height:1.45; }
+
+/* ── Bilgi satırları ────────────────────────────────────────── */
+.bilgiler{ padding:18px 0 0; display:flex; flex-direction:column; }
+.satir{ display:flex; gap:12px; align-items:baseline; padding:13px 0; border-bottom:1px solid var(--cizgi); }
+.satir:first-child{ border-top:1px solid var(--cizgi); }
+.satir dt{
+  flex:0 0 92px; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--yaprak); font-weight:700;
+}
+.satir dd{ margin:0; font-size:.89rem; color:var(--sessiz); }
+
+/* ── Kapanış ────────────────────────────────────────────────── */
+.kapanis{
+  margin:34px 22px 0; padding:32px 22px; border-radius:20px;
+  background:#1A0720; color:#F6EDF3; text-align:center; position:relative; overflow:hidden;
+}
+.kapanis img{ position:absolute; inset:0; z-index:0; width:100%; height:100%; object-fit:cover; }
+.kapanis::before{
+  content:""; position:absolute; inset:0; z-index:1;
+  background:radial-gradient(ellipse 75% 60% at 50% 50%, rgba(26,7,32,.76) 0%, rgba(26,7,32,.66) 60%, rgba(26,7,32,.56) 100%);
+}
+.kapanis > *{ position:relative; z-index:2; }
+.kapanis h2{ font-family:var(--serif); font-weight:400; font-size:1.6rem; margin:0 0 8px; text-wrap:balance; }
+.kapanis p{ margin:0 auto 20px; font-size:.9rem; color:#DFCFDE; max-width:28ch; }
+.buyukdugme{
+  display:inline-flex; align-items:center; justify-content:center; gap:9px;
+  background:var(--wa); color:#fff; font-weight:650; font-size:.98rem;
+  padding:14px 26px; border-radius:999px; box-shadow:0 10px 28px -10px rgba(30,163,90,.7);
+}
+.buyukdugme svg{ width:19px; height:19px; fill:currentColor; }
+
+/* ── Alt bilgi ──────────────────────────────────────────────── */
+.altbilgi{ text-align:center; padding:30px 22px 10px; }
+.ig{ display:inline-flex; align-items:center; gap:7px; font-size:.88rem; color:var(--sessiz); font-weight:500; }
+.ig svg{ width:16px; height:16px; fill:none; stroke:currentColor; stroke-width:1.7; }
+.imza{ font-size:.72rem; color:var(--sessiz); opacity:.75; margin:14px 0 0; }
+
+/* ── Sabit alt çubuk ────────────────────────────────────────── */
+.cubuk{
+  position:fixed; left:50%; bottom:calc(14px + env(safe-area-inset-bottom));
+  transform:translate(-50%,140%); width:min(430px, calc(100vw - 28px)); z-index:50;
+  transition:transform .34s cubic-bezier(.22,1,.36,1);
+}
+.cubuk.acik{ transform:translate(-50%,0); }
+.cubuk a{
+  display:flex; align-items:center; justify-content:center; gap:9px;
+  background:var(--wa); color:#fff; font-weight:650; font-size:.95rem;
+  padding:15px 20px; border-radius:999px;
+  box-shadow:0 8px 30px -6px rgba(21,60,35,.55), 0 2px 6px rgba(0,0,0,.2);
+}
+.cubuk a:active{ background:var(--wa-koyu); }
+.cubuk svg{ width:19px; height:19px; fill:currentColor; }
+
+/* ── Yedek pencere: tarayıcı WhatsApp'ı engellerse ──────────── */
+.perde{
+  position:fixed; inset:0; z-index:100; display:none;
+  align-items:center; justify-content:center; padding:22px;
+  background:rgba(16,5,20,.72); backdrop-filter:blur(3px);
+}
+.perde.acik{ display:flex; }
+.kutu{
+  background:var(--kart); color:var(--murekkep); border-radius:20px;
+  padding:24px 22px; max-width:360px; width:100%; text-align:center;
+  box-shadow:0 24px 60px -20px rgba(0,0,0,.6);
+}
+.kutu h3{ font-family:var(--serif); font-weight:400; font-size:1.25rem; margin:0 0 8px; }
+.kutu p{ font-size:.87rem; color:var(--sessiz); margin:0 0 16px; line-height:1.5; }
+.numara{ font-size:1.35rem; font-weight:650; font-variant-numeric:tabular-nums; margin:0 0 16px; }
+.kutu button{
+  font:inherit; font-size:.9rem; font-weight:600; cursor:pointer;
+  width:100%; padding:13px; border-radius:999px; border:0; margin-bottom:9px;
+  background:var(--wa); color:#fff;
+}
+.kutu .ikincil{ background:transparent; color:var(--sessiz); border:1px solid var(--cizgi); }
+
+/* ── Giriş animasyonu ───────────────────────────────────────── */
+.gir{ opacity:0; transform:translateY(14px); }
+.gir.gorundu{ opacity:1; transform:none; transition:opacity .5s ease, transform .5s cubic-bezier(.22,1,.36,1); }
+@media (prefers-reduced-motion: reduce){
+  .gir,.gir.gorundu{ opacity:1; transform:none; transition:none; }
+  .cubuk,.paket{ transition:none; }
+}
+</style>
+
+<div class="sayfa" lang="tr">
+
+  <div id="uyari" hidden class="uyari">
+    <strong>Yayınlamadan önce:</strong> WhatsApp numarası girilmedi.
+    Dosyanın en üstündeki <code>whatsapp:</code> satırını doldurun.
+  </div>
+
+  <header class="hero">
+    <img src="gorseller/hero.jpg" alt="Bahçemizde elde tutulan taze aronya salkımı" fetchpriority="high">
+    <p class="ustluk">Kendi bahçemizden · Elle toplanır</p>
+    <h1 class="marka">Aronya</h1>
+    <p class="latince">Aronia melanocarpa</p>
+    <hr class="kural">
+    <p class="giris">
+      Bahçemizde yetişen aronya meyvesi. İstediğiniz pakete dokunun,
+      WhatsApp'tan doğrudan bize yazın.
+    </p>
+    <div class="rozetler">
+      <span class="rozet">Taze meyve</span>
+      <span class="rozet">Yüksek antioksidan</span>
+      <span class="rozet">Katkısız</span>
+    </div>
+  </header>
+
+  <section class="bolum gir">
+    <p class="etiket">Ürün</p>
+    <h2 class="baslik">Taze aronya meyvesi</h2>
+  </section>
+
+  <div class="urun gir">
+    <img src="gorseller/urun.jpg" alt="Dalında olgunlaşmış koyu mor aronya salkımları" loading="lazy" decoding="async">
+    <div class="urunGovde">
+      <h3>Taze, bahçeden geldiği gibi</h3>
+      <p>
+        Kendi bahçemizde yetişen aronya, taze meyve olarak satılır.
+        Kurutulmamış, işlenmemiş, karışımsız.
+      </p>
+    </div>
+  </div>
+
+  <section class="bolum gir">
+    <p class="etiket">Paketler</p>
+    <h2 class="baslik">Ne kadar istersiniz?</h2>
+    <p class="altyazi" id="fiyatNotu">Fiyatlar için pakete dokunup WhatsApp'tan yazın — hemen dönüş yapıyoruz.</p>
+  </section>
+
+  <div class="paketler" id="paketler"></div>
+
+  <section class="bolum gir">
+    <p class="etiket">Bahçemizden</p>
+    <h2 class="baslik">Meyveyi topladığımız yer</h2>
+    <p class="altyazi">Fotoğrafların hepsi kendi sıralarımızdan, bu sezon çekildi.</p>
+  </section>
+
+  <div class="serit gir" id="serit">
+    <div><img src="gorseller/bahce-1.jpg" alt="Meyve yüklü aronya çalısı" loading="lazy" decoding="async"></div>
+    <div><img src="gorseller/bahce-2.jpg" alt="Dalında aronya salkımı" loading="lazy" decoding="async"></div>
+    <div><img src="gorseller/bahce-3.jpg" alt="Bahçede olgunlaşan aronyalar" loading="lazy" decoding="async"></div>
+    <div><img src="gorseller/bahce-4.jpg" alt="Elde tutulan aronya salkımı" loading="lazy" decoding="async"></div>
+    <div><img src="gorseller/bahce-5.jpg" alt="Sık meyveli aronya dalları" loading="lazy" decoding="async"></div>
+    <div><img src="gorseller/bahce-6.jpg" alt="Aronya çalısına uzanan el" loading="lazy" decoding="async"></div>
+  </div>
+  <div class="noktalar" id="noktalar" role="tablist" aria-label="Bahçe fotoğrafları"></div>
+
+  <section class="bolum gir">
+    <p class="etiket">Neden aronya?</p>
+    <h2 class="baslik">Rengi nereden geliyor?</h2>
+    <p class="altyazi">
+      Aronyanın neredeyse siyaha çalan moru antosiyaninden gelir — meyveye rengini
+      veren bitkisel bir polifenol. Aronya, bu bileşiklerin ölçülen meyveler
+      arasında en yoğun olduğu türlerden biri.
+    </p>
+
+    <div class="olcumler">
+      <div class="olcum genis">
+        <span class="sayi">600–2.300 mg</span>
+        <span class="olcumEtiket">100 gram taze meyvede toplam polifenol</span>
+      </div>
+      <div class="olcum">
+        <span class="sayi">~4 kat</span>
+        <span class="olcumEtiket">Yaban mersinine göre antosiyanin</span>
+      </div>
+      <div class="olcum">
+        <span class="sayi">~5 g</span>
+        <span class="olcumEtiket">100 gramda lif</span>
+      </div>
+    </div>
+
+    <p class="kaynak">
+      Değerler <i>Aronia melanocarpa</i> üzerine bilimsel derlemelerden;
+      çeşide, hasat zamanına ve toprağa göre değişir. Aronya bir gıdadır,
+      ilaç değildir — insan çalışmaları sürüyor ve kesin bir sağlık iddiası
+      taşımaz.
+    </p>
+
+    <div class="tat">
+      <h3>Tadı nasıl?</h3>
+      <p>
+        Buruk ve mayhoş — ağzı kurutan o his tanenden gelir. İlk kez
+        deneyecekseniz tek başına değil, yoğurt, bal veya muzla birlikte
+        tadın. Dondurucuda beklettikçe burukluğu yumuşar.
+      </p>
+    </div>
+  </section>
+
+  <section class="bolum gir">
+    <p class="etiket">Nasıl tüketilir?</p>
+    <h2 class="baslik">Güne aronya katmanın dört yolu</h2>
+    <div class="yollar">
+      <div class="yol"><h3>Kahvaltıda</h3><p>Bir avuç aronyayı yoğurda veya yulafa ekleyin, bal serpin.</p></div>
+      <div class="yol"><h3>Smoothie'de</h3><p>Muz ve sütle blenderdan geçirin; muz burukluğu dengeler.</p></div>
+      <div class="yol"><h3>Dondurucuda</h3><p>Yıkayıp poşetleyin, kış boyu elinizin altında olsun.</p></div>
+      <div class="yol"><h3>Tatlılarda</h3><p>Kek, reçel ve granola tariflerine renk ve tat verir.</p></div>
+    </div>
+  </section>
+
+  <section class="bolum gir">
+    <p class="etiket">Sipariş &amp; teslimat</p>
+    <h2 class="baslik">Bilmeniz gerekenler</h2>
+    <dl class="bilgiler">
+      <div class="satir"><dt>Sipariş</dt><dd>Tamamen WhatsApp üzerinden, tek mesajla.</dd></div>
+      <div class="satir"><dt>Kargo</dt><dd>Türkiye'nin her yerine gönderiyoruz.</dd></div>
+      <div class="satir"><dt>Ürün</dt><dd>Taze aronya meyvesi, 100 g'dan 5 kg'a paketler.</dd></div>
+      <div class="satir"><dt>Sezon</dt><dd>Ağustos–eylül aylarında taze meyve dönemi.</dd></div>
+    </dl>
+  </section>
+
+  <section class="kapanis gir">
+    <img src="gorseller/bahce-3.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async">
+    <h2>Kaç kilo ayıralım?</h2>
+    <p>Kargo ve teslimat için tek mesaj yeterli.</p>
+    <a class="buyukdugme" id="genelDugme" href="#" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.87 9.87 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.8 14.13c-.25.69-1.45 1.32-2 1.4-.51.08-1.16.11-1.87-.12-.43-.14-.98-.32-1.69-.63-2.98-1.29-4.92-4.29-5.07-4.49-.15-.2-1.21-1.61-1.21-3.07 0-1.46.77-2.18 1.04-2.48.27-.3.59-.37.79-.37h.57c.18 0 .43-.07.67.51.25.6.85 2.07.92 2.22.08.15.13.32.02.52-.1.2-.15.32-.3.5-.15.17-.32.39-.45.52-.15.15-.31.31-.13.61.17.3.77 1.27 1.65 2.06 1.13 1.01 2.09 1.32 2.39 1.47.3.15.47.13.65-.08.17-.2.75-.87.95-1.17.2-.3.4-.25.67-.15.27.1 1.72.81 2.02.96.3.15.5.22.57.35.07.12.07.72-.18 1.42Z"/></svg>
+      WhatsApp'tan yazın
+    </a>
+  </section>
+
+  <footer class="altbilgi gir">
+    <a class="ig" id="igLink" href="#" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="3" y="3" width="18" height="18" rx="5"/>
+        <circle cx="12" cy="12" r="4"/>
+        <circle cx="17.2" cy="6.8" r=".9" fill="currentColor" stroke="none"/>
+      </svg>
+      <span id="igAd">@aronya_aronia</span>
+    </a>
+    <p class="imza">Aronya · Aronia melanocarpa · Türkiye</p>
+  </footer>
+</div>
+
+<div class="perde" id="perde" role="dialog" aria-modal="true" aria-labelledby="perdeBaslik">
+  <div class="kutu">
+    <h3 id="perdeBaslik">WhatsApp açılamadı</h3>
+    <p>Tarayıcınız yeni sekme açmayı engelledi. Bize doğrudan bu numaradan yazabilirsiniz:</p>
+    <p class="numara" id="perdeNumara">+90 531 948 90 31</p>
+    <button type="button" id="kopyala">Numarayı kopyala</button>
+    <button type="button" class="ikincil" id="kapat">Kapat</button>
+  </div>
+</div>
+
+<div class="cubuk" id="cubuk">
+  <a id="cubukLink" href="#" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.87 9.87 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.8 14.13c-.25.69-1.45 1.32-2 1.4-.51.08-1.16.11-1.87-.12-.43-.14-.98-.32-1.69-.63-2.98-1.29-4.92-4.29-5.07-4.49-.15-.2-1.21-1.61-1.21-3.07 0-1.46.77-2.18 1.04-2.48.27-.3.59-.37.79-.37h.57c.18 0 .43-.07.67.51.25.6.85 2.07.92 2.22.08.15.13.32.02.52-.1.2-.15.32-.3.5-.15.17-.32.39-.45.52-.15.15-.31.31-.13.61.17.3.77 1.27 1.65 2.06 1.13 1.01 2.09 1.32 2.39 1.47.3.15.47.13.65-.08.17-.2.75-.87.95-1.17.2-.3.4-.25.67-.15.27.1 1.72.81 2.02.96.3.15.5.22.57.35.07.12.07.72-.18 1.42Z"/></svg>
+    WhatsApp'tan sipariş verin
+  </a>
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  const numara = String(AYARLAR.whatsapp).replace(/\D/g, "");
+  const kurulu = numara.length >= 10 && !/X/i.test(AYARLAR.whatsapp);
+  const wa = (metin) => kurulu ? `https://wa.me/${numara}?text=${encodeURIComponent(metin)}` : "#";
+  if (!kurulu) document.getElementById("uyari").hidden = false;
+
+  document.getElementById("genelDugme").href = wa(AYARLAR.genelMesaj);
+  document.getElementById("cubukLink").href  = wa(AYARLAR.genelMesaj);
+  document.getElementById("igLink").href     = `https://instagram.com/${AYARLAR.instagram}`;
+  document.getElementById("igAd").textContent = "@" + AYARLAR.instagram;
+
+  const kac = (s) => String(s).replace(/[&<>"]/g, (k) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[k]));
+  const waSvg = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.87 9.87 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.8 14.13c-.25.69-1.45 1.32-2 1.4-.51.08-1.16.11-1.87-.12-.43-.14-.98-.32-1.69-.63-2.98-1.29-4.92-4.29-5.07-4.49-.15-.2-1.21-1.61-1.21-3.07 0-1.46.77-2.18 1.04-2.48.27-.3.59-.37.79-.37h.57c.18 0 .43-.07.67.51.25.6.85 2.07.92 2.22.08.15.13.32.02.52-.1.2-.15.32-.3.5-.15.17-.32.39-.45.52-.15.15-.31.31-.13.61.17.3.77 1.27 1.65 2.06 1.13 1.01 2.09 1.32 2.39 1.47.3.15.47.13.65-.08.17-.2.75-.87.95-1.17.2-.3.4-.25.67-.15.27.1 1.72.81 2.02.96.3.15.5.22.57.35.07.12.07.72-.18 1.42Z"/></svg>';
+
+  const fiyatVar = AYARLAR.fiyatlariGoster && AYARLAR.paketler.some((p) => p.fiyat);
+  if (fiyatVar) document.getElementById("fiyatNotu").textContent =
+    "İstediğiniz pakete dokunun, siparişiniz hazır mesajla bize ulaşsın.";
+
+  document.getElementById("paketler").innerHTML = AYARLAR.paketler.map((p) => {
+    const fiyatliMi = AYARLAR.fiyatlariGoster && p.fiyat;
+    const metin = fiyatliMi
+      ? AYARLAR.siparisMesaji.replace("{paket}", p.agirlik).replace("{fiyat}", p.fiyat)
+      : AYARLAR.mesaj.replace("{paket}", p.agirlik);
+    const govde = [
+      p.not ? `<span class="paketNot">${kac(p.not)}</span>` : "",
+      fiyatliMi ? `<span class="paketFiyat">${kac(p.fiyat)}</span>` : ""
+    ].join("");
+    const dugme = fiyatliMi ? "Sipariş ver" : "Sor";
+    return `
+      <a class="paket" href="${wa(metin)}" target="_blank" rel="noopener"
+         aria-label="${kac(p.agirlik)} taze aronya${fiyatliMi ? ", " + kac(p.fiyat) : ""} — WhatsApp'tan yazın">
+        <span class="agirlik">${kac(p.agirlik)}</span>
+        <span class="paketGovde">${govde}</span>
+        <span class="sor">${waSvg} ${dugme}</span>
+      </a>`;
+  }).join("");
+
+  /* ── Yedek pencere ────────────────────────────────────────────
+     Instagram'ın kendi tarayıcısı gibi ortamlar yeni sekme açmayı
+     engelleyebilir; müşteri boş ekranla kalmasın diye numarayı
+     gösteriyoruz.                                               */
+  const perde = document.getElementById("perde");
+  const guzel = numara.length === 12
+    ? "+" + numara.replace(/^(\d{2})(\d{3})(\d{3})(\d{2})(\d{2})$/, "$1 $2 $3 $4 $5")
+    : "+" + numara;
+  document.getElementById("perdeNumara").textContent = guzel;
+
+  let sayac = null;
+  const iptal = () => { clearTimeout(sayac); sayac = null; };
+  window.addEventListener("blur", iptal);
+  window.addEventListener("pagehide", iptal);
+  document.addEventListener("visibilitychange", () => { if (document.hidden) iptal(); });
+
+  document.addEventListener("click", (e) => {
+    const bag = e.target.closest("a");
+    if (!bag) return;
+    if (bag.getAttribute("href") === "#") {
+      e.preventDefault();
+      alert("WhatsApp numarası henüz eklenmemiş.\n\nDosyanın en üstündeki AYARLAR bölümünde\nwhatsapp: \"905XXXXXXXXX\" satırını doldurun.");
+      return;
+    }
+    if (!bag.href.includes("wa.me")) return;
+    iptal();
+    sayac = setTimeout(() => { perde.classList.add("acik"); sayac = null; }, 1200);
+  });
+
+  document.getElementById("kapat").addEventListener("click", () => perde.classList.remove("acik"));
+  perde.addEventListener("click", (e) => { if (e.target === perde) perde.classList.remove("acik"); });
+
+  document.getElementById("kopyala").addEventListener("click", async (e) => {
+    const dugme = e.currentTarget;
+    try {
+      await navigator.clipboard.writeText(guzel);
+    } catch {
+      const alan = document.createElement("textarea");
+      alan.value = guzel; document.body.appendChild(alan); alan.select();
+      try { document.execCommand("copy"); } catch {}
+      alan.remove();
+    }
+    dugme.textContent = "Kopyalandı ✓";
+    setTimeout(() => { dugme.textContent = "Numarayı kopyala"; }, 2000);
+  });
+
+  /* ── Bahçe galerisi: kendi kendine döner ───────────────────
+     Ziyaretçi parmağıyla kaydırırsa dönme durur — kimse
+     okurken altından kayan bir galeriyle uğraşmak istemez.    */
+  const serit = document.getElementById("serit");
+  const kareler = [...serit.children];
+  const noktalar = document.getElementById("noktalar");
+  let aktifKare = 0, donuyor = true;
+
+  noktalar.innerHTML = kareler.map((_, i) =>
+    `<button class="nokta" type="button" role="tab" aria-label="Fotoğraf ${i + 1}"
+             aria-current="${i === 0}"></button>`).join("");
+  const noktaListe = [...noktalar.children];
+
+  const kareyeGit = (i, yumusak = true) => {
+    const hedef = kareler[i];
+    serit.scrollTo({ left: hedef.offsetLeft - serit.offsetLeft, behavior: yumusak ? "smooth" : "auto" });
+  };
+
+  const noktalariGuncelle = () => {
+    const orta = serit.scrollLeft + serit.clientWidth / 2;
+    let enYakin = 0, enKisa = Infinity;
+    kareler.forEach((k, i) => {
+      const merkez = k.offsetLeft - serit.offsetLeft + k.offsetWidth / 2;
+      const fark = Math.abs(merkez - orta);
+      if (fark < enKisa) { enKisa = fark; enYakin = i; }
+    });
+    aktifKare = enYakin;
+    noktaListe.forEach((n, i) => n.setAttribute("aria-current", i === enYakin));
+  };
+
+  let kaydirmaSayaci;
+  serit.addEventListener("scroll", () => {
+    clearTimeout(kaydirmaSayaci);
+    kaydirmaSayaci = setTimeout(noktalariGuncelle, 90);
+  }, { passive: true });
+
+  const durdur = () => { donuyor = false; };
+  serit.addEventListener("pointerdown", durdur, { passive: true });
+  serit.addEventListener("touchstart", durdur, { passive: true });
+  serit.addEventListener("wheel", durdur, { passive: true });
+
+  noktaListe.forEach((n, i) => n.addEventListener("click", () => { durdur(); kareyeGit(i); }));
+
+  const azHareket = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!azHareket) {
+    setInterval(() => {
+      if (!donuyor || document.hidden) return;
+      const yer = serit.getBoundingClientRect();
+      if (yer.bottom < 0 || yer.top > innerHeight) return;  // ekranda değilse boşuna dönme
+      kareyeGit((aktifKare + 1) % kareler.length);
+    }, 3800);
+  }
+
+  /* ── Sabit çubuk + giriş animasyonu ───────────────────────── */
+  const cubuk = document.getElementById("cubuk");
+  new IntersectionObserver(
+    ([g]) => cubuk.classList.toggle("acik", !g.isIntersecting), { threshold: 0 }
+  ).observe(document.querySelector(".hero"));
+
+  const gozcu = new IntersectionObserver((girisler) => {
+    for (const g of girisler) {
+      if (g.isIntersecting) { g.target.classList.add("gorundu"); gozcu.unobserve(g.target); }
+    }
+  }, { threshold: .12 });
+  document.querySelectorAll(".gir").forEach((el) => gozcu.observe(el));
+})();
+</script>
+</body>
+</html>
