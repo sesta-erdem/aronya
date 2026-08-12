@@ -3,13 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Aronya — Kendi Bahçemizden</title>
-<meta name="description" content="Kendi bahçemizde yetişen aronya meyvesi. 100 g'dan 5 kg'a paketler. Beğendiğiniz pakete dokunun, WhatsApp'tan sipariş verin.">
+<title>Taze Aronya — Kendi Bahçemizden | Eylül Hasadı, Kargo Dahil</title>
+<meta name="description" content="Kendi bahçemizde ilaçsız yetişen taze aronya. Eylül hasadı için ön sipariş alıyoruz. 1–5 kg paketler, kargo dahil, WhatsApp'tan tek mesajla sipariş.">
 <meta name="theme-color" content="#1A0720">
+<link rel="canonical" href="https://sesta-erdem.github.io/aronya/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M17 8 Q24 1 29 4 Q24 10 17 9Z' fill='%2355682E'/%3E%3Ccircle cx='16' cy='19' r='11' fill='%233E1442'/%3E%3Ccircle cx='12' cy='15' r='3.4' fill='%23A98CB8' opacity='.45'/%3E%3C/svg%3E">
+
 <meta property="og:type" content="website">
-<meta property="og:title" content="Aronya — Kendi Bahçemizden">
-<meta property="og:description" content="Kendi bahçemizde yetişen aronya meyvesi. 100 g'dan 5 kg'a paketler.">
-<meta property="og:image" content="gorseller/hero.jpg">
+<meta property="og:url" content="https://sesta-erdem.github.io/aronya/">
+<meta property="og:site_name" content="Aronya">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:title" content="Taze Aronya — Kendi Bahçemizden">
+<meta property="og:description" content="Eylül hasadı için ön sipariş alıyoruz. İlaçsız yetiştirilen taze aronya, 1–5 kg paketler, kargo dahil.">
+<meta property="og:image" content="https://sesta-erdem.github.io/aronya/gorseller/hero.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="900">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
 
@@ -21,26 +30,43 @@ const AYARLAR = {
 
   // WhatsApp numarası: ülke kodu ile, başında + veya 0 olmadan.
   whatsapp: "905319489031",
-
   instagram: "aronya_aronia",
 
-  // ⬇️ Fiyatları yazınca true yapın; false iken "Fiyat için sorun" görünür.
+  /* ⚠️ FİYATLAR ÖRNEKTİR. Toptan taban fiyatınızı ve kargo
+     maliyetinizi öğrenince buradan güncelleyin.
+     Kural: her basamakta kilo başı fiyat bir öncekinden en az
+     %5 aşağıda olsun — yoksa büyük paketi almanın anlamı kalmaz.
+        1 kg → 500 TL/kg   2 kg → 450   3 kg → 400   5 kg → 370   */
   fiyatlariGoster: true,
+  kargoDahil: true,
 
-  // ⬇️ PAKETLER. not alanı boş bırakılabilir.
   paketler: [
-    { agirlik: "100 g", not: "", fiyat: "100 TL"  },
-    { agirlik: "1 kg",  not: "", fiyat: "400 TL"  },
-    { agirlik: "2 kg",  not: "", fiyat: "700 TL"  },
-    { agirlik: "4 kg",  not: "", fiyat: "1200 TL" },
-    { agirlik: "5 kg",  not: "", fiyat: "1500 TL" }
+    { agirlik: "1 kg", fiyat: "500 TL",  populer: false },
+    { agirlik: "2 kg", fiyat: "900 TL",  populer: true  },
+    { agirlik: "3 kg", fiyat: "1.200 TL", populer: false },
+    { agirlik: "5 kg", fiyat: "1.850 TL", populer: false }
   ],
 
-  // WhatsApp'a giden hazır mesaj. {paket} = ağırlık, {fiyat} = fiyat.
-  // Fiyat görünürken siparişMesaji, gizliyken mesaj kullanılır.
-  siparisMesaji: "Merhaba, Instagram sayfanızdan geliyorum. {paket} taze aronya ({fiyat}) sipariş etmek istiyorum.",
-  mesaj: "Merhaba, Instagram sayfanızdan geliyorum. {paket} taze aronya için fiyat ve sipariş bilgisi almak istiyorum.",
-  genelMesaj: "Merhaba, Instagram sayfanızdan geliyorum. Taze aronya siparişi hakkında bilgi almak istiyorum."
+  // ⬇️ BAHÇE BİLGİSİ. Boş bırakılan alanlar sayfada görünmez.
+  bahce: {
+    yer: "",              // ör. "Düzce, Akçakoca" — doldurun
+    fidan: "1400",
+    hasatMiktari: ""      // ör. "1.200" (kg) — 10 çalıyı tartıp tahmin edince yazın
+  },
+
+  hasatZamani: "eylülün ilk haftası",
+  toptanEsik: "50 kg",
+
+  // WhatsApp'a giden hazır mesajlar.
+  siparisMesaji:
+    "Merhaba, ön sipariş vermek istiyorum.\n\n" +
+    "Paket: {paket}{fiyat}\n" +
+    "Ad soyad:\n" +
+    "Telefon:\n" +
+    "İl / ilçe:\n" +
+    "Adres:",
+  genelMesaj: "Merhaba, taze aronya ön siparişi hakkında bilgi almak istiyorum.",
+  toptanMesaji: "Merhaba, toptan alım için yazıyorum.\n\nİlgilendiğim miktar (kg):\nFirma / kullanım amacı:\nİl / ilçe:"
 };
 /* ══════════ AYARLAR BİTTİ — aşağısını değiştirmenize gerek yok ══════════ */
 </script>
@@ -94,27 +120,25 @@ body{ margin:0; background:var(--zemin-alt); font-family:var(--sans); }
   max-width:470px; margin:0 auto; background:var(--zemin);
   color:var(--murekkep); font-size:16px; line-height:1.6;
   -webkit-font-smoothing:antialiased;
-  min-height:100vh; padding-bottom:100px;
+  min-height:100vh; padding-bottom:124px;
   box-shadow:0 0 60px rgba(43,15,48,.10);
   overflow-x:hidden;
 }
-img,video{ max-width:100%; display:block; }
+img{ max-width:100%; display:block; }
 a{ color:inherit; text-decoration:none; }
 :focus-visible{ outline:2px solid var(--pus); outline-offset:3px; border-radius:4px; }
 
 .uyari{ background:#8A1D1D; color:#fff; font-size:.8rem; padding:10px 18px; line-height:1.45; }
 .uyari code{ background:rgba(255,255,255,.2); padding:1px 5px; border-radius:4px; }
 
-/* ── Hero: bahçeden gerçek kare ─────────────────────────────── */
+/* ── Hero ───────────────────────────────────────────────────── */
 .hero{
   position:relative; color:#F6EDF3; text-align:center;
   padding:52px 26px 44px; overflow:hidden; background:#1A0720;
 }
 /* z-index:0 şart: aşağıdaki ".hero > *" kuralı fotoğrafı da yakalayıp
    karartma katmanının üstüne çıkarıyor, yazılar okunmaz hale geliyor. */
-.hero img{
-  position:absolute; inset:0; z-index:0; width:100%; height:100%; object-fit:cover;
-}
+.hero img{ position:absolute; inset:0; z-index:0; width:100%; height:100%; object-fit:cover; }
 .hero::before{
   content:""; position:absolute; inset:0; z-index:1;
   background:
@@ -129,14 +153,12 @@ a{ color:inherit; text-decoration:none; }
 
 .ustluk{
   font-size:.63rem; letter-spacing:.24em; text-transform:uppercase;
-  color:#E7D8EA; font-weight:600; margin:0 0 16px;
-  text-shadow:0 1px 8px rgba(20,5,24,.7);
+  color:#E7D8EA; font-weight:600; margin:0 0 16px; text-shadow:0 1px 8px rgba(20,5,24,.7);
 }
 .marka{
   font-family:var(--serif); font-weight:400;
   font-size:clamp(3.2rem,17vw,4.4rem); line-height:.92;
-  letter-spacing:-.025em; margin:0; text-wrap:balance;
-  text-shadow:0 2px 20px rgba(20,5,24,.6);
+  letter-spacing:-.025em; margin:0; text-wrap:balance; text-shadow:0 2px 20px rgba(20,5,24,.6);
 }
 .latince{
   font-family:var(--serif); font-style:italic; font-size:.9rem;
@@ -150,9 +172,24 @@ a{ color:inherit; text-decoration:none; }
 .rozetler{ display:flex; flex-wrap:wrap; justify-content:center; gap:7px; margin-top:22px; }
 .rozet{
   font-size:.7rem; padding:5px 11px; border-radius:999px; color:#F0E4F0;
-  border:1px solid rgba(230,215,235,.45); background:rgba(26,7,32,.35);
-  backdrop-filter:blur(2px);
+  border:1px solid rgba(230,215,235,.45); background:rgba(26,7,32,.35); backdrop-filter:blur(2px);
 }
+
+/* ── Ön sipariş şeridi ──────────────────────────────────────── */
+.onsiparis{
+  margin:18px 22px 0; padding:16px 18px; border-radius:18px;
+  background:#4C5E28; color:#F5F2E6;
+}
+:root[data-theme="dark"] .onsiparis{ background:#3A4A1E; }
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .onsiparis{ background:#3A4A1E; }
+}
+.onsiparis .baslikcik{
+  font-size:.63rem; letter-spacing:.22em; text-transform:uppercase;
+  font-weight:700; color:#CBD9A6; margin:0 0 7px;
+}
+.onsiparis p{ margin:0; font-size:.9rem; line-height:1.55; }
+.onsiparis strong{ font-weight:650; }
 
 /* ── Bölüm başlıkları ───────────────────────────────────────── */
 .bolum{ padding:34px 22px 0; }
@@ -166,7 +203,7 @@ a{ color:inherit; text-decoration:none; }
 }
 .altyazi{ color:var(--sessiz); font-size:.93rem; margin:9px 0 0; }
 
-/* ── Ürün kartı ─────────────────────────────────────────────── */
+/* ── Ürün / bahçe kartı ─────────────────────────────────────── */
 .urun{
   margin:20px 22px 0; border-radius:20px; overflow:hidden;
   background:var(--kart); border:1px solid var(--cizgi); box-shadow:var(--golge);
@@ -175,36 +212,60 @@ a{ color:inherit; text-decoration:none; }
 .urunGovde{ padding:16px 18px 18px; }
 .urunGovde h3{ font-family:var(--serif); font-weight:400; font-size:1.35rem; margin:0; letter-spacing:-.015em; }
 .urunGovde p{ font-size:.9rem; color:var(--sessiz); margin:8px 0 0; }
+.urunGovde p + p{ margin-top:10px; }
+
+/* ── Kıtlık satırı ──────────────────────────────────────────── */
+.kitlik{
+  margin:16px 22px 0; padding:12px 15px; border-radius:14px;
+  background:var(--zemin-alt); border:1px solid var(--cizgi);
+  font-size:.85rem; color:var(--murekkep); line-height:1.5;
+}
 
 /* ── Paket satırları ────────────────────────────────────────── */
-.paketler{ display:flex; flex-direction:column; gap:10px; padding:18px 22px 0; }
+.paketler{ display:flex; flex-direction:column; gap:10px; padding:16px 22px 0; }
 .paket{
-  display:flex; align-items:center; gap:14px;
+  position:relative; display:flex; align-items:center; gap:12px;
   background:var(--kart); border:1px solid var(--cizgi); border-radius:16px;
-  padding:14px 15px; box-shadow:var(--golge);
+  padding:15px; box-shadow:var(--golge);
   transition:transform .16s ease, border-color .16s ease, box-shadow .16s ease;
 }
 .paket:active{ transform:scale(.985); }
 @media (hover:hover){
   .paket:hover{ border-color:var(--pus); box-shadow:0 2px 4px rgba(43,15,48,.06), 0 16px 34px -16px rgba(78,21,83,.4); }
 }
+.paket.one{ border-color:var(--mor); padding-top:20px; margin-top:4px; }
+.rozetPopuler{
+  position:absolute; top:-9px; left:15px;
+  background:var(--mor); color:#fff; font-size:.62rem; font-weight:700;
+  letter-spacing:.1em; text-transform:uppercase; padding:3px 9px; border-radius:999px;
+}
+:root[data-theme="dark"] .rozetPopuler{ color:#1A0720; }
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .rozetPopuler{ color:#1A0720; }
+}
 .agirlik{
-  flex:0 0 74px; font-family:var(--serif); font-size:1.5rem; line-height:1;
+  flex:0 0 62px; font-family:var(--serif); font-size:1.5rem; line-height:1;
   letter-spacing:-.02em; font-variant-numeric:tabular-nums; color:var(--mor);
 }
 :root[data-theme="dark"] .agirlik{ color:var(--pus); }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .agirlik{ color:var(--pus); } }
-.paketGovde{ flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
-.paketNot{ font-size:.87rem; color:var(--sessiz); line-height:1.35; }
+.paketGovde{ flex:1; min-width:0; display:flex; flex-direction:column; gap:1px; }
 .paketFiyat{ font-size:1.05rem; font-weight:650; font-variant-numeric:tabular-nums; letter-spacing:-.01em; }
+.paketNot{ font-size:.72rem; color:var(--sessiz); }
 .sor{
   flex:0 0 auto; display:inline-flex; align-items:center; gap:6px;
-  background:var(--mor); color:#fff; font-size:.79rem; font-weight:600;
+  background:var(--mor); color:#fff; font-size:.78rem; font-weight:600;
   padding:9px 13px; border-radius:999px; white-space:nowrap;
 }
 :root[data-theme="dark"] .sor{ color:#1A0720; }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .sor{ color:#1A0720; } }
 .sor svg{ width:14px; height:14px; fill:currentColor; }
+
+.toptan{
+  display:block; margin:14px 22px 0; padding:13px 15px; border-radius:14px;
+  border:1px dashed var(--cizgi); font-size:.85rem; color:var(--sessiz); text-align:center;
+}
+.toptan b{ color:var(--murekkep); font-weight:650; }
 
 /* ── Bahçe şeridi: kendi kendine dönen galeri ───────────────── */
 .serit{
@@ -217,8 +278,7 @@ a{ color:inherit; text-decoration:none; }
   flex:0 0 78%; scroll-snap-align:center; border-radius:18px; overflow:hidden;
   aspect-ratio:4/5; background:#1A0720; box-shadow:var(--golge);
 }
-.serit img, .serit video{ width:100%; height:100%; object-fit:cover; }
-
+.serit img{ width:100%; height:100%; object-fit:cover; }
 .noktalar{ display:flex; justify-content:center; gap:7px; padding:14px 22px 0; }
 .nokta{
   width:7px; height:7px; padding:0; border:0; border-radius:50%; cursor:pointer;
@@ -230,7 +290,7 @@ a{ color:inherit; text-decoration:none; }
   :root:not([data-theme="light"]) .nokta[aria-current="true"]{ background:var(--pus); }
 }
 
-/* ── Ölçümler: kahraman sayı + iki destekçi ─────────────────── */
+/* ── Ölçümler ───────────────────────────────────────────────── */
 .olcumler{ display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:18px 0 0; }
 .olcum{
   background:var(--kart); border:1px solid var(--cizgi); border-radius:16px;
@@ -245,14 +305,9 @@ a{ color:inherit; text-decoration:none; }
 .olcum.genis .sayi{ font-size:2.3rem; }
 :root[data-theme="dark"] .sayi{ color:var(--pus); }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .sayi{ color:var(--pus); } }
-.olcumEtiket{
-  display:block; margin-top:6px; font-size:.75rem; line-height:1.35; color:var(--sessiz);
-}
-.kaynak{
-  font-size:.72rem; color:var(--sessiz); opacity:.85; margin:12px 0 0; line-height:1.5;
-}
+.olcumEtiket{ display:block; margin-top:6px; font-size:.75rem; line-height:1.35; color:var(--sessiz); }
+.kaynak{ font-size:.72rem; color:var(--sessiz); opacity:.85; margin:12px 0 0; line-height:1.5; }
 
-/* ── Tat notu ───────────────────────────────────────────────── */
 .tat{
   margin-top:16px; padding:16px 18px; border-radius:16px;
   background:var(--zemin-alt); border:1px solid var(--cizgi);
@@ -271,10 +326,28 @@ a{ color:inherit; text-decoration:none; }
 .satir{ display:flex; gap:12px; align-items:baseline; padding:13px 0; border-bottom:1px solid var(--cizgi); }
 .satir:first-child{ border-top:1px solid var(--cizgi); }
 .satir dt{
-  flex:0 0 92px; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase;
-  color:var(--yaprak); font-weight:700;
+  flex:0 0 96px; font-size:.66rem; letter-spacing:.11em; text-transform:uppercase;
+  color:var(--yaprak); font-weight:700; line-height:1.35;
 }
 .satir dd{ margin:0; font-size:.89rem; color:var(--sessiz); }
+
+/* ── SSS ────────────────────────────────────────────────────── */
+.sss{ padding:18px 0 0; display:flex; flex-direction:column; gap:8px; }
+.sss details{
+  background:var(--kart); border:1px solid var(--cizgi); border-radius:14px;
+  padding:0 15px; overflow:hidden;
+}
+.sss summary{
+  cursor:pointer; list-style:none; padding:14px 0; font-size:.92rem; font-weight:600;
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+}
+.sss summary::-webkit-details-marker{ display:none; }
+.sss summary::after{
+  content:"+"; font-size:1.2rem; font-weight:400; color:var(--yaprak);
+  line-height:1; flex:0 0 auto; transition:transform .2s ease;
+}
+.sss details[open] summary::after{ transform:rotate(45deg); }
+.sss details p{ margin:0 0 15px; font-size:.86rem; color:var(--sessiz); line-height:1.55; }
 
 /* ── Kapanış ────────────────────────────────────────────────── */
 .kapanis{
@@ -305,7 +378,7 @@ a{ color:inherit; text-decoration:none; }
 /* ── Sabit alt çubuk ────────────────────────────────────────── */
 .cubuk{
   position:fixed; left:50%; bottom:calc(14px + env(safe-area-inset-bottom));
-  transform:translate(-50%,140%); width:min(430px, calc(100vw - 28px)); z-index:50;
+  transform:translate(-50%,150%); width:min(430px, calc(100vw - 28px)); z-index:50;
   transition:transform .34s cubic-bezier(.22,1,.36,1);
 }
 .cubuk.acik{ transform:translate(-50%,0); }
@@ -317,8 +390,15 @@ a{ color:inherit; text-decoration:none; }
 }
 .cubuk a:active{ background:var(--wa-koyu); }
 .cubuk svg{ width:19px; height:19px; fill:currentColor; }
+/* Masaüstünde tam genişlik bir bar orantısız durur; sağ altta
+   kompakt bir düğmeye iner. */
+@media (min-width:820px){
+  .cubuk{ left:auto; right:24px; bottom:24px; width:auto; transform:translateY(160%); }
+  .cubuk.acik{ transform:translateY(0); }
+  .cubuk a{ padding:14px 22px; font-size:.9rem; }
+}
 
-/* ── Yedek pencere: tarayıcı WhatsApp'ı engellerse ──────────── */
+/* ── Yedek pencere ──────────────────────────────────────────── */
 .perde{
   position:fixed; inset:0; z-index:100; display:none;
   align-items:center; justify-content:center; padding:22px;
@@ -357,21 +437,26 @@ a{ color:inherit; text-decoration:none; }
   </div>
 
   <header class="hero">
-    <img src="gorseller/hero.jpg" alt="Bahçemizde elde tutulan taze aronya salkımı" fetchpriority="high">
+    <img src="gorseller/hero.webp" alt="Bahçemizde elde tutulan taze aronya salkımı" fetchpriority="high">
     <p class="ustluk">Kendi bahçemizden · Elle toplanır</p>
     <h1 class="marka">Aronya</h1>
     <p class="latince">Aronia melanocarpa</p>
     <hr class="kural">
     <p class="giris">
-      Bahçemizde yetişen aronya meyvesi. İstediğiniz pakete dokunun,
+      Bahçemizde ilaçsız yetişen taze aronya. İstediğiniz pakete dokunun,
       WhatsApp'tan doğrudan bize yazın.
     </p>
     <div class="rozetler">
       <span class="rozet">Taze meyve</span>
-      <span class="rozet">Yüksek antioksidan</span>
-      <span class="rozet">Katkısız</span>
+      <span class="rozet">İlaçsız</span>
+      <span class="rozet">Kargo dahil</span>
     </div>
   </header>
+
+  <div class="onsiparis">
+    <p class="baslikcik">Ön sipariş alıyoruz</p>
+    <p id="onsiparisMetin"></p>
+  </div>
 
   <section class="bolum gir">
     <p class="etiket">Ürün</p>
@@ -379,7 +464,7 @@ a{ color:inherit; text-decoration:none; }
   </section>
 
   <div class="urun gir">
-    <img src="gorseller/urun.jpg" alt="Dalında olgunlaşmış koyu mor aronya salkımları" loading="lazy" decoding="async">
+    <img src="gorseller/urun.webp" alt="Dalında olgunlaşmış koyu mor aronya salkımları" loading="lazy" decoding="async">
     <div class="urunGovde">
       <h3>Taze, bahçeden geldiği gibi</h3>
       <p>
@@ -390,12 +475,34 @@ a{ color:inherit; text-decoration:none; }
   </div>
 
   <section class="bolum gir">
-    <p class="etiket">Paketler</p>
-    <h2 class="baslik">Ne kadar istersiniz?</h2>
-    <p class="altyazi" id="fiyatNotu">Fiyatlar için pakete dokunup WhatsApp'tan yazın — hemen dönüş yapıyoruz.</p>
+    <p class="etiket">Bahçemiz</p>
+    <h2 class="baslik">Kimden alıyorsunuz?</h2>
   </section>
 
+  <div class="urun gir">
+    <img src="gorseller/bahce-4.webp" alt="Bahçede elle toplanan aronya salkımı" loading="lazy" decoding="async">
+    <div class="urunGovde">
+      <h3 id="bahceBaslik">Bahçemiz</h3>
+      <p id="bahceMetin"></p>
+      <p>
+        Meyveleri elle, salkım salkım topluyoruz. Aklınıza takılan her şeyi
+        doğrudan bize sorabilirsiniz — telefonun ucunda üretici var.
+      </p>
+    </div>
+  </div>
+
+  <section class="bolum gir">
+    <p class="etiket">Paketler</p>
+    <h2 class="baslik">Ne kadar ayıralım?</h2>
+    <p class="altyazi">Fiyatlara kargo dahil. Pakete dokunun, hazır sipariş mesajı açılsın.</p>
+  </section>
+
+  <div class="kitlik gir" id="kitlik" hidden></div>
   <div class="paketler" id="paketler"></div>
+
+  <a class="toptan gir" id="toptanBag" href="#" target="_blank" rel="noopener">
+    <b id="toptanEsikMetin"></b> üzeri toptan alımlar için ayrıca yazın →
+  </a>
 
   <section class="bolum gir">
     <p class="etiket">Bahçemizden</p>
@@ -404,12 +511,12 @@ a{ color:inherit; text-decoration:none; }
   </section>
 
   <div class="serit gir" id="serit">
-    <div><img src="gorseller/bahce-1.jpg" alt="Meyve yüklü aronya çalısı" loading="lazy" decoding="async"></div>
-    <div><img src="gorseller/bahce-2.jpg" alt="Dalında aronya salkımı" loading="lazy" decoding="async"></div>
-    <div><img src="gorseller/bahce-3.jpg" alt="Bahçede olgunlaşan aronyalar" loading="lazy" decoding="async"></div>
-    <div><img src="gorseller/bahce-4.jpg" alt="Elde tutulan aronya salkımı" loading="lazy" decoding="async"></div>
-    <div><img src="gorseller/bahce-5.jpg" alt="Sık meyveli aronya dalları" loading="lazy" decoding="async"></div>
-    <div><img src="gorseller/bahce-6.jpg" alt="Aronya çalısına uzanan el" loading="lazy" decoding="async"></div>
+    <div><img src="gorseller/bahce-1.webp" alt="Meyve yüklü aronya çalısı" loading="lazy" decoding="async"></div>
+    <div><img src="gorseller/bahce-2.webp" alt="Dalında aronya salkımı" loading="lazy" decoding="async"></div>
+    <div><img src="gorseller/bahce-3.webp" alt="Bahçede olgunlaşan aronyalar" loading="lazy" decoding="async"></div>
+    <div><img src="gorseller/bahce-4.webp" alt="Elde tutulan aronya salkımı" loading="lazy" decoding="async"></div>
+    <div><img src="gorseller/bahce-5.webp" alt="Sık meyveli aronya dalları" loading="lazy" decoding="async"></div>
+    <div><img src="gorseller/bahce-6.webp" alt="Aronya çalısına uzanan el" loading="lazy" decoding="async"></div>
   </div>
   <div class="noktalar" id="noktalar" role="tablist" aria-label="Bahçe fotoğrafları"></div>
 
@@ -468,18 +575,19 @@ a{ color:inherit; text-decoration:none; }
   <section class="bolum gir">
     <p class="etiket">Sipariş &amp; teslimat</p>
     <h2 class="baslik">Bilmeniz gerekenler</h2>
-    <dl class="bilgiler">
-      <div class="satir"><dt>Sipariş</dt><dd>Tamamen WhatsApp üzerinden, tek mesajla.</dd></div>
-      <div class="satir"><dt>Kargo</dt><dd>Türkiye'nin her yerine gönderiyoruz.</dd></div>
-      <div class="satir"><dt>Ürün</dt><dd>Taze aronya meyvesi, 100 g'dan 5 kg'a paketler.</dd></div>
-      <div class="satir"><dt>Sezon</dt><dd>Ağustos–eylül aylarında taze meyve dönemi.</dd></div>
-    </dl>
+    <dl class="bilgiler" id="bilgiler"></dl>
+  </section>
+
+  <section class="bolum gir">
+    <p class="etiket">Sık sorulanlar</p>
+    <h2 class="baslik">Aklınızdaki sorular</h2>
+    <div class="sss" id="sss"></div>
   </section>
 
   <section class="kapanis gir">
-    <img src="gorseller/bahce-3.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async">
+    <img src="gorseller/bahce-3.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
     <h2>Kaç kilo ayıralım?</h2>
-    <p>Kargo ve teslimat için tek mesaj yeterli.</p>
+    <p>Ön sipariş için tek mesaj yeterli.</p>
     <a class="buyukdugme" id="genelDugme" href="#" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.87 9.87 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.8 14.13c-.25.69-1.45 1.32-2 1.4-.51.08-1.16.11-1.87-.12-.43-.14-.98-.32-1.69-.63-2.98-1.29-4.92-4.29-5.07-4.49-.15-.2-1.21-1.61-1.21-3.07 0-1.46.77-2.18 1.04-2.48.27-.3.59-.37.79-.37h.57c.18 0 .43-.07.67.51.25.6.85 2.07.92 2.22.08.15.13.32.02.52-.1.2-.15.32-.3.5-.15.17-.32.39-.45.52-.15.15-.31.31-.13.61.17.3.77 1.27 1.65 2.06 1.13 1.01 2.09 1.32 2.39 1.47.3.15.47.13.65-.08.17-.2.75-.87.95-1.17.2-.3.4-.25.67-.15.27.1 1.72.81 2.02.96.3.15.5.22.57.35.07.12.07.72-.18 1.42Z"/></svg>
       WhatsApp'tan yazın
@@ -512,7 +620,7 @@ a{ color:inherit; text-decoration:none; }
 <div class="cubuk" id="cubuk">
   <a id="cubukLink" href="#" target="_blank" rel="noopener">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.87 9.87 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.8 14.13c-.25.69-1.45 1.32-2 1.4-.51.08-1.16.11-1.87-.12-.43-.14-.98-.32-1.69-.63-2.98-1.29-4.92-4.29-5.07-4.49-.15-.2-1.21-1.61-1.21-3.07 0-1.46.77-2.18 1.04-2.48.27-.3.59-.37.79-.37h.57c.18 0 .43-.07.67.51.25.6.85 2.07.92 2.22.08.15.13.32.02.52-.1.2-.15.32-.3.5-.15.17-.32.39-.45.52-.15.15-.31.31-.13.61.17.3.77 1.27 1.65 2.06 1.13 1.01 2.09 1.32 2.39 1.47.3.15.47.13.65-.08.17-.2.75-.87.95-1.17.2-.3.4-.25.67-.15.27.1 1.72.81 2.02.96.3.15.5.22.57.35.07.12.07.72-.18 1.42Z"/></svg>
-    WhatsApp'tan sipariş verin
+    Ön sipariş için WhatsApp'tan yazın
   </a>
 </div>
 
@@ -525,36 +633,84 @@ a{ color:inherit; text-decoration:none; }
   const wa = (metin) => kurulu ? `https://wa.me/${numara}?text=${encodeURIComponent(metin)}` : "#";
   if (!kurulu) document.getElementById("uyari").hidden = false;
 
-  document.getElementById("genelDugme").href = wa(AYARLAR.genelMesaj);
-  document.getElementById("cubukLink").href  = wa(AYARLAR.genelMesaj);
-  document.getElementById("igLink").href     = `https://instagram.com/${AYARLAR.instagram}`;
-  document.getElementById("igAd").textContent = "@" + AYARLAR.instagram;
-
   const kac = (s) => String(s).replace(/[&<>"]/g, (k) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[k]));
   const waSvg = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.87 9.87 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.8 14.13c-.25.69-1.45 1.32-2 1.4-.51.08-1.16.11-1.87-.12-.43-.14-.98-.32-1.69-.63-2.98-1.29-4.92-4.29-5.07-4.49-.15-.2-1.21-1.61-1.21-3.07 0-1.46.77-2.18 1.04-2.48.27-.3.59-.37.79-.37h.57c.18 0 .43-.07.67.51.25.6.85 2.07.92 2.22.08.15.13.32.02.52-.1.2-.15.32-.3.5-.15.17-.32.39-.45.52-.15.15-.31.31-.13.61.17.3.77 1.27 1.65 2.06 1.13 1.01 2.09 1.32 2.39 1.47.3.15.47.13.65-.08.17-.2.75-.87.95-1.17.2-.3.4-.25.67-.15.27.1 1.72.81 2.02.96.3.15.5.22.57.35.07.12.07.72-.18 1.42Z"/></svg>';
 
-  const fiyatVar = AYARLAR.fiyatlariGoster && AYARLAR.paketler.some((p) => p.fiyat);
-  if (fiyatVar) document.getElementById("fiyatNotu").textContent =
-    "İstediğiniz pakete dokunun, siparişiniz hazır mesajla bize ulaşsın.";
+  document.getElementById("genelDugme").href  = wa(AYARLAR.genelMesaj);
+  document.getElementById("cubukLink").href   = wa(AYARLAR.genelMesaj);
+  document.getElementById("toptanBag").href   = wa(AYARLAR.toptanMesaji);
+  document.getElementById("toptanEsikMetin").textContent = AYARLAR.toptanEsik;
+  document.getElementById("igLink").href      = `https://instagram.com/${AYARLAR.instagram}`;
+  document.getElementById("igAd").textContent = "@" + AYARLAR.instagram;
 
+  /* ── Ön sipariş şeridi ────────────────────────────────────── */
+  document.getElementById("onsiparisMetin").innerHTML =
+    `Hasat <strong>${kac(AYARLAR.hasatZamani)}</strong> başlıyor. Siparişler geliş
+     sırasına göre, <strong>toplandığı gün</strong> kargoya veriliyor.`;
+
+  /* ── Bahçe tanıtımı ──────────────────────────────────────── */
+  const b = AYARLAR.bahce;
+  document.getElementById("bahceBaslik").textContent = b.yer ? `Bahçemiz ${b.yer}'de` : "Bahçemiz";
+  document.getElementById("bahceMetin").textContent =
+    (b.yer ? `Bahçemiz ${b.yer}'de. ` : "") +
+    (b.fidan ? `${b.fidan} aronya fidanı, ilaçsız yetiştiriliyor. ` : "İlaçsız yetiştiriyoruz. ");
+
+  /* ── Kıtlık satırı (miktar girilmişse) ───────────────────── */
+  if (b.hasatMiktari) {
+    const k = document.getElementById("kitlik");
+    k.hidden = false;
+    k.innerHTML = `Bu sezon bahçemizden yaklaşık <strong>${kac(b.hasatMiktari)} kg</strong>
+                   ürün çıkıyor. Ön siparişler bitince sezon kapanıyor.`;
+  }
+
+  /* ── Paketler ────────────────────────────────────────────── */
   document.getElementById("paketler").innerHTML = AYARLAR.paketler.map((p) => {
     const fiyatliMi = AYARLAR.fiyatlariGoster && p.fiyat;
-    const metin = fiyatliMi
-      ? AYARLAR.siparisMesaji.replace("{paket}", p.agirlik).replace("{fiyat}", p.fiyat)
-      : AYARLAR.mesaj.replace("{paket}", p.agirlik);
-    const govde = [
-      p.not ? `<span class="paketNot">${kac(p.not)}</span>` : "",
-      fiyatliMi ? `<span class="paketFiyat">${kac(p.fiyat)}</span>` : ""
-    ].join("");
-    const dugme = fiyatliMi ? "Sipariş ver" : "Sor";
+    const metin = AYARLAR.siparisMesaji
+      .replace("{paket}", p.agirlik)
+      .replace("{fiyat}", fiyatliMi ? ` (${p.fiyat}${AYARLAR.kargoDahil ? ", kargo dahil" : ""})` : "");
     return `
-      <a class="paket" href="${wa(metin)}" target="_blank" rel="noopener"
-         aria-label="${kac(p.agirlik)} taze aronya${fiyatliMi ? ", " + kac(p.fiyat) : ""} — WhatsApp'tan yazın">
+      <a class="paket${p.populer ? " one" : ""}" href="${wa(metin)}" target="_blank" rel="noopener"
+         aria-label="${kac(p.agirlik)} taze aronya${fiyatliMi ? ", " + kac(p.fiyat) : ""} — ön sipariş">
+        ${p.populer ? '<span class="rozetPopuler">En çok tercih edilen</span>' : ""}
         <span class="agirlik">${kac(p.agirlik)}</span>
-        <span class="paketGovde">${govde}</span>
-        <span class="sor">${waSvg} ${dugme}</span>
+        <span class="paketGovde">
+          ${fiyatliMi ? `<span class="paketFiyat">${kac(p.fiyat)}</span>` : ""}
+          ${fiyatliMi && AYARLAR.kargoDahil ? '<span class="paketNot">kargo dahil</span>' : ""}
+        </span>
+        <span class="sor">${waSvg} Ön sipariş</span>
       </a>`;
   }).join("");
+
+  /* ── Bilmeniz gerekenler ─────────────────────────────────── */
+  const bilgiler = [
+    ["Sezon", `Hasat: ${AYARLAR.hasatZamani}. Şu an ön sipariş dönemi, sıra numaranız mesajla bildirilir.`],
+    ["Paketleme", "Strafor kutu ve buz aküsüyle, toplandığı gün kargoda. 1–2 günde teslim."],
+    ["Kargo", "Fiyatlara dahil, Türkiye'nin her yerine."],
+    ["Garanti", "Ürün bozuk ulaşırsa fotoğrafını gönderin; yenisini yollarız ya da ücretini iade ederiz."],
+    ["Ödeme", "Kargoya vermeden önce havale/EFT."],
+    ["Sipariş", "Tamamen WhatsApp üzerinden, tek mesajla."]
+  ];
+  document.getElementById("bilgiler").innerHTML = bilgiler.map(([b, m]) =>
+    `<div class="satir"><dt>${kac(b)}</dt><dd>${kac(m)}</dd></div>`).join("");
+
+  /* ── SSS ─────────────────────────────────────────────────── */
+  const sorular = [
+    ["Ne zaman gönderiyorsunuz?",
+     `Hasat ${AYARLAR.hasatZamani} başlıyor. Ön siparişler geliş sırasına göre, meyvenin toplandığı gün kargoya veriliyor. Sıranız geldiğinde size mesaj atıyoruz.`],
+    ["Kargoda bozulur mu?",
+     "Strafor kutu ve buz aküsüyle gönderiyoruz, teslimat 1–2 gün sürüyor. Yine de bozuk ulaşırsa fotoğrafını gönderin; yenisini yollarız ya da ücretini iade ederiz."],
+    ["Ne kadar dayanır?",
+     "Buzdolabında (+4 °C) birkaç hafta durur. Yıkayıp süzdükten sonra poşetleyip dondurursanız kış boyu kullanabilirsiniz; donmuş aronyanın burukluğu da azalır."],
+    ["İlaç kullanıyor musunuz?",
+     "Hayır. Bahçede ilaç kullanmıyoruz."],
+    ["Toptan alım yapıyor musunuz?",
+     `Evet. ${AYARLAR.toptanEsik} üzeri alımlar için ayrı fiyat veriyoruz — reçel, meyve suyu, kafe ve market alımları için WhatsApp'tan yazın.`],
+    ["Ödemeyi nasıl yapıyorum?",
+     "Sıranız gelip siparişiniz hazırlanınca havale/EFT ile ödüyorsunuz; ödeme aldıktan sonra kargoya veriyoruz."]
+  ];
+  document.getElementById("sss").innerHTML = sorular.map(([s, c]) =>
+    `<details><summary>${kac(s)}</summary><p>${kac(c)}</p></details>`).join("");
 
   /* ── Yedek pencere ────────────────────────────────────────────
      Instagram'ın kendi tarayıcısı gibi ortamlar yeni sekme açmayı
@@ -615,9 +771,9 @@ a{ color:inherit; text-decoration:none; }
              aria-current="${i === 0}"></button>`).join("");
   const noktaListe = [...noktalar.children];
 
-  const kareyeGit = (i, yumusak = true) => {
+  const kareyeGit = (i) => {
     const hedef = kareler[i];
-    serit.scrollTo({ left: hedef.offsetLeft - serit.offsetLeft, behavior: yumusak ? "smooth" : "auto" });
+    serit.scrollTo({ left: hedef.offsetLeft - serit.offsetLeft, behavior: "smooth" });
   };
 
   const noktalariGuncelle = () => {
@@ -642,15 +798,13 @@ a{ color:inherit; text-decoration:none; }
   serit.addEventListener("pointerdown", durdur, { passive: true });
   serit.addEventListener("touchstart", durdur, { passive: true });
   serit.addEventListener("wheel", durdur, { passive: true });
-
   noktaListe.forEach((n, i) => n.addEventListener("click", () => { durdur(); kareyeGit(i); }));
 
-  const azHareket = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (!azHareket) {
+  if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     setInterval(() => {
       if (!donuyor || document.hidden) return;
       const yer = serit.getBoundingClientRect();
-      if (yer.bottom < 0 || yer.top > innerHeight) return;  // ekranda değilse boşuna dönme
+      if (yer.bottom < 0 || yer.top > innerHeight) return;   // ekranda değilse boşuna dönme
       kareyeGit((aktifKare + 1) % kareler.length);
     }, 3800);
   }
