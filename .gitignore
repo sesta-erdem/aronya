@@ -1,0 +1,10 @@
+# ⚠️ MÜŞTERİ BİLGİSİ ASLA YAYINA GİTMESİN
+# Bu klasördeki her dosya siteyle birlikte internete açılıyor.
+# Aşağıdakiler hariç tutulur — sipariş listesi, adresler, telefonlar.
+siparis-takip.csv
+siparis-takip.xlsx
+_ozel/
+*.numbers
+
+# Sistem dosyaları
+.DS_Store
