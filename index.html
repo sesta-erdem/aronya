@@ -30,7 +30,7 @@ const AYARLAR = {
 
   // WhatsApp numarası: ülke kodu ile, başında + veya 0 olmadan.
   whatsapp: "905319489031",
-  instagram: "aronya_aronia",
+  instagram: "",
 
   /* ⚠️ FİYATLAR ÖRNEKTİR. Toptan taban fiyatınızı ve kargo
      maliyetinizi öğrenince buradan güncelleyin.
@@ -114,6 +114,8 @@ const AYARLAR = {
 }
 
 *{ box-sizing:border-box; }
+/* Sınıf tabanlı display kuralları hidden özniteliğini eziyor; bu onu geri alır. */
+[hidden]{ display:none !important; }
 body{ margin:0; background:var(--zemin-alt); font-family:var(--sans); }
 
 .sayfa{
@@ -405,6 +407,8 @@ a{ color:inherit; text-decoration:none; }
 .altbilgi{ text-align:center; padding:30px 22px 10px; }
 .ig{ display:inline-flex; align-items:center; gap:7px; font-size:.88rem; color:var(--sessiz); font-weight:500; }
 .ig svg{ width:16px; height:16px; fill:none; stroke:currentColor; stroke-width:1.7; }
+.iletisim{ font-size:.88rem; color:var(--sessiz); line-height:1.6; margin:0; }
+.iletisim strong{ color:var(--murekkep); font-variant-numeric:tabular-nums; letter-spacing:.01em; }
 .imza{ font-size:.72rem; color:var(--sessiz); opacity:.75; margin:14px 0 0; }
 
 /* ── Sabit alt çubuk ────────────────────────────────────────── */
@@ -636,15 +640,16 @@ a{ color:inherit; text-decoration:none; }
   </section>
 
   <footer class="altbilgi gir">
-    <a class="ig" id="igLink" href="#" target="_blank" rel="noopener">
+    <a class="ig" id="igLink" href="#" target="_blank" rel="noopener" hidden>
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <rect x="3" y="3" width="18" height="18" rx="5"/>
         <circle cx="12" cy="12" r="4"/>
         <circle cx="17.2" cy="6.8" r=".9" fill="currentColor" stroke="none"/>
       </svg>
-      <span id="igAd">@aronya_aronia</span>
+      <span id="igAd"></span>
     </a>
-    <p class="imza">Aronya · Aronia melanocarpa · Türkiye</p>
+    <p class="iletisim" id="iletisim"></p>
+    <p class="imza" id="imza"></p>
   </footer>
 </div>
 
@@ -672,6 +677,9 @@ a{ color:inherit; text-decoration:none; }
   const numara = String(AYARLAR.whatsapp).replace(/\D/g, "");
   const kurulu = numara.length >= 10 && !/X/i.test(AYARLAR.whatsapp);
   const wa = (metin) => kurulu ? `https://wa.me/${numara}?text=${encodeURIComponent(metin)}` : "#";
+  const guzelNumara = numara.length === 12
+    ? "+" + numara.replace(/^(\d{2})(\d{3})(\d{3})(\d{2})(\d{2})$/, "$1 $2 $3 $4 $5")
+    : "+" + numara;
   if (!kurulu) document.getElementById("uyari").hidden = false;
 
   const kac = (s) => String(s).replace(/[&<>"]/g, (k) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[k]));
@@ -681,8 +689,19 @@ a{ color:inherit; text-decoration:none; }
   document.getElementById("cubukLink").href   = wa(AYARLAR.genelMesaj);
   document.getElementById("toptanBag").href   = wa(AYARLAR.toptanMesaji);
   document.getElementById("toptanEsikMetin").textContent = AYARLAR.toptanEsik;
-  document.getElementById("igLink").href      = `https://instagram.com/${AYARLAR.instagram}`;
-  document.getElementById("igAd").textContent = "@" + AYARLAR.instagram;
+  /* ── Alt bilgi ───────────────────────────────────────────────
+     Instagram hesabı henüz yok. AYARLAR'daki instagram alanına
+     kullanıcı adını yazdığınız an bağlantı kendiliğinden çıkar.  */
+  if (AYARLAR.instagram) {
+    const ig = document.getElementById("igLink");
+    ig.hidden = false;
+    ig.href = `https://instagram.com/${AYARLAR.instagram}`;
+    document.getElementById("igAd").textContent = "@" + AYARLAR.instagram;
+  }
+  document.getElementById("iletisim").innerHTML =
+    `Sipariş ve sorularınız için WhatsApp:<br><strong>${kac(guzelNumara)}</strong>`;
+  document.getElementById("imza").textContent =
+    ["Aronya", "Aronia melanocarpa", AYARLAR.bahce.yer || "Türkiye"].join(" · ");
 
   /* ── Ön sipariş şeridi ────────────────────────────────────── */
   document.getElementById("onsiparisMetin").innerHTML =
@@ -779,10 +798,7 @@ a{ color:inherit; text-decoration:none; }
      engelleyebilir; müşteri boş ekranla kalmasın diye numarayı
      gösteriyoruz.                                               */
   const perde = document.getElementById("perde");
-  const guzel = numara.length === 12
-    ? "+" + numara.replace(/^(\d{2})(\d{3})(\d{3})(\d{2})(\d{2})$/, "$1 $2 $3 $4 $5")
-    : "+" + numara;
-  document.getElementById("perdeNumara").textContent = guzel;
+  document.getElementById("perdeNumara").textContent = guzelNumara;
 
   let sayac = null;
   const iptal = () => { clearTimeout(sayac); sayac = null; };
@@ -809,10 +825,10 @@ a{ color:inherit; text-decoration:none; }
   document.getElementById("kopyala").addEventListener("click", async (e) => {
     const dugme = e.currentTarget;
     try {
-      await navigator.clipboard.writeText(guzel);
+      await navigator.clipboard.writeText(guzelNumara);
     } catch {
       const alan = document.createElement("textarea");
-      alan.value = guzel; document.body.appendChild(alan); alan.select();
+      alan.value = guzelNumara; document.body.appendChild(alan); alan.select();
       try { document.execCommand("copy"); } catch {}
       alan.remove();
     }
