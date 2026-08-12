@@ -290,6 +290,38 @@ a{ color:inherit; text-decoration:none; }
   :root:not([data-theme="light"]) .nokta[aria-current="true"]{ background:var(--pus); }
 }
 
+/* ── Karşılaştırma çubukları ────────────────────────────────
+   Tek seri, her çubuk doğrudan etiketli — bu yüzden ne gösterge
+   ne de tooltip gerekiyor; değerler zaten ekranda.            */
+.grafik{
+  margin:18px 0 0; padding:16px 16px 14px; border-radius:16px;  /* figure'ın 40px varsayılan yan boşluğu sıfırlanmalı */
+  background:var(--kart); border:1px solid var(--cizgi); box-shadow:var(--golge);
+}
+.grafikBaslik{
+  font-size:.68rem; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--sessiz); font-weight:700; margin:0 0 14px;
+}
+.cubuklar{ display:flex; flex-direction:column; gap:11px; }
+.cubukSatir{ display:flex; align-items:center; gap:9px; }
+.cubukAd{ flex:0 0 88px; font-size:.76rem; line-height:1.2; color:var(--murekkep); }
+.cubukSatir.one .cubukAd{ font-weight:700; }
+/* display:block şart — inline span yüzde genişlik ve yükseklik almaz. */
+.cubukYol{ display:block; flex:1; min-width:0; height:14px; }
+.cubukDolgu{
+  display:block; height:100%; min-width:3px; border-radius:0 4px 4px 0;
+  background:var(--pus); opacity:.45;
+}
+.cubukSatir.one .cubukDolgu{ background:var(--mor); opacity:1; }
+:root[data-theme="dark"] .cubukSatir.one .cubukDolgu{ background:var(--pus); }
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .cubukSatir.one .cubukDolgu{ background:var(--pus); }
+}
+.cubukDeger{
+  flex:0 0 46px; text-align:right; font-size:.78rem; color:var(--sessiz);
+  font-variant-numeric:tabular-nums;
+}
+.cubukSatir.one .cubukDeger{ color:var(--murekkep); font-weight:700; }
+
 /* ── Ölçümler ───────────────────────────────────────────────── */
 .olcumler{ display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:18px 0 0; }
 .olcum{
@@ -299,7 +331,7 @@ a{ color:inherit; text-decoration:none; }
 .olcum.genis{ grid-column:1 / -1; }
 .sayi{
   font-family:var(--serif); font-weight:400; color:var(--mor);
-  font-size:1.85rem; line-height:1.05; letter-spacing:-.02em;
+  font-size:1.5rem; line-height:1.05; letter-spacing:-.02em;
   font-variant-numeric:tabular-nums; display:block;
 }
 .olcum.genis .sayi{ font-size:2.3rem; }
@@ -522,41 +554,50 @@ a{ color:inherit; text-decoration:none; }
 
   <section class="bolum gir">
     <p class="etiket">Neden aronya?</p>
-    <h2 class="baslik">Rengi nereden geliyor?</h2>
+    <h2 class="baslik">Bu koyuluk tesadüf değil</h2>
     <p class="altyazi">
-      Aronyanın neredeyse siyaha çalan moru antosiyaninden gelir — meyveye rengini
-      veren bitkisel bir polifenol. Aronya, bu bileşiklerin ölçülen meyveler
-      arasında en yoğun olduğu türlerden biri.
+      Çoğu meyvede renk kabukta durur. Aronyayı ikiye böldüğünüzde içi de mor —
+      suyu elinize, tahtaya, beyaz tişörte bulaşır. Bu koyuluğu yapan
+      <strong>antosiyanin</strong>, bitkinin kendini güneşten, soğuktan ve
+      böcekten koruyan pigmenti. Aronya bunu, markette bulacağınız hiçbir
+      meyvenin yaklaşamadığı yoğunlukta üretiyor.
+    </p>
+
+    <figure class="grafik">
+      <figcaption class="grafikBaslik">100 gramda antosiyanin (mg)</figcaption>
+      <div class="cubuklar" id="cubuklar"></div>
+    </figure>
+
+    <p class="kaynak">
+      Kaynak: Wu ve ark. (2006), USDA — yüzden fazla gıdanın <i>aynı yöntemle</i>
+      (HPLC) ölçüldüğü çalışma, bu yüzden meyveler birebir karşılaştırılabiliyor.
+      Türkiye'de markette bulunan meyveler seçildi. Değerler çeşide, olgunluğa ve
+      toprağa göre değişir.
     </p>
 
     <div class="olcumler">
-      <div class="olcum genis">
-        <span class="sayi">600–2.300 mg</span>
-        <span class="olcumEtiket">100 gram taze meyvede toplam polifenol</span>
-      </div>
       <div class="olcum">
-        <span class="sayi">~4 kat</span>
-        <span class="olcumEtiket">Yaban mersinine göre antosiyanin</span>
+        <span class="sayi">600–2.300</span>
+        <span class="olcumEtiket">100 gramda toplam polifenol (mg)</span>
       </div>
       <div class="olcum">
         <span class="sayi">~5 g</span>
-        <span class="olcumEtiket">100 gramda lif</span>
+        <span class="olcumEtiket">100 gramda lif — günlük ihtiyacın yaklaşık beşte biri</span>
       </div>
     </div>
 
     <p class="kaynak">
-      Değerler <i>Aronia melanocarpa</i> üzerine bilimsel derlemelerden;
-      çeşide, hasat zamanına ve toprağa göre değişir. Aronya bir gıdadır,
-      ilaç değildir — insan çalışmaları sürüyor ve kesin bir sağlık iddiası
-      taşımaz.
+      Aronya bir gıdadır, ilaç değildir. Bu sayılar meyvenin içeriğini anlatır;
+      insan çalışmaları sürüyor ve sayfa hiçbir sağlık iddiası taşımaz.
     </p>
 
     <div class="tat">
-      <h3>Tadı nasıl?</h3>
+      <h3>Peki neden buruk?</h3>
       <p>
-        Buruk ve mayhoş — ağzı kurutan o his tanenden gelir. İlk kez
-        deneyecekseniz tek başına değil, yoğurt, bal veya muzla birlikte
-        tadın. Dondurucuda beklettikçe burukluğu yumuşar.
+        Ağzı kurutan o his tanenden gelir — pigmentle aynı savunma sisteminin
+        parçası. Yani aronyayı değerli yapan şeyle burukluğu yapan şey aynı.
+        İlk kez deneyecekseniz tek başına değil; yoğurt, bal veya muzla tadın.
+        Dondurucuda beklettikçe burukluğu yumuşar.
       </p>
     </div>
   </section>
@@ -711,6 +752,27 @@ a{ color:inherit; text-decoration:none; }
   ];
   document.getElementById("sss").innerHTML = sorular.map(([s, c]) =>
     `<details><summary>${kac(s)}</summary><p>${kac(c)}</p></details>`).join("");
+
+  /* ── Antosiyanin karşılaştırması ──────────────────────────────
+     Wu ve ark. 2006 (USDA), mg/100 g taze ağırlık, HPLC.
+     Tek çalışma kullanıldı: farklı çalışmaların rakamları yöntem
+     farkından ötürü birbiriyle karşılaştırılamıyor.            */
+  const antosiyanin = [
+    { ad: "Aronya",        deger: 1520, one: true },
+    { ad: "Frenk üzümü",   deger: 1030 },
+    { ad: "Yaban mersini", deger: 265 },
+    { ad: "Böğürtlen",     deger: 260 },
+    { ad: "Çilek",         deger: 40 }
+  ];
+  const enBuyuk = Math.max(...antosiyanin.map((m) => m.deger));
+  const trSayi = (n) => n.toLocaleString("tr-TR");
+
+  document.getElementById("cubuklar").innerHTML = antosiyanin.map((m) => `
+    <div class="cubukSatir${m.one ? " one" : ""}">
+      <span class="cubukAd">${kac(m.ad)}</span>
+      <span class="cubukYol"><span class="cubukDolgu" style="width:${(m.deger / enBuyuk * 100).toFixed(1)}%"></span></span>
+      <span class="cubukDeger">${trSayi(m.deger)}</span>
+    </div>`).join("");
 
   /* ── Yedek pencere ────────────────────────────────────────────
      Instagram'ın kendi tarayıcısı gibi ortamlar yeni sekme açmayı
