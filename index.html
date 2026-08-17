@@ -32,19 +32,24 @@ const AYARLAR = {
   whatsapp: "905319489031",
   instagram: "",
 
-  /* ⚠️ FİYATLAR ÖRNEKTİR. Toptan taban fiyatınızı ve kargo
-     maliyetinizi öğrenince buradan güncelleyin.
-     Kural: her basamakta kilo başı fiyat bir öncekinden en az
-     %5 aşağıda olsun — yoksa büyük paketi almanın anlamı kalmaz.
-        1 kg → 500 TL/kg   2 kg → 450   3 kg → 400   5 kg → 370   */
+  /* ── FİYAT ────────────────────────────────────────────────────
+     Paket fiyatları elle yazılmıyor, buradan hesaplanıyor:
+         paket fiyatı = kiloFiyati × kg + kargoUcreti
+     Kargo kutu başına sabit olduğu için kilo başı fiyat büyük
+     pakette kendiliğinden düşüyor — merdiven bozulmuyor.        */
+  fiyat: {
+    kiloFiyati:  350,   // aronyanın kilo fiyatı (TL)
+    kargoUcreti: 150,   // ⚠️ TAHMİN — strafor kutu + kargo. Şubeden öğrenip güncelleyin.
+    yuvarla:      10    // fiyatlar bu katsayıya yuvarlanır
+  },
   fiyatlariGoster: true,
   kargoDahil: true,
 
   paketler: [
-    { agirlik: "1 kg", fiyat: "500 TL",  populer: false },
-    { agirlik: "2 kg", fiyat: "900 TL",  populer: true  },
-    { agirlik: "3 kg", fiyat: "1.200 TL", populer: false },
-    { agirlik: "5 kg", fiyat: "1.850 TL", populer: false }
+    { kg: 1, populer: false },
+    { kg: 2, populer: true  },
+    { kg: 3, populer: false },
+    { kg: 5, populer: false }
   ],
 
   // ⬇️ BAHÇE BİLGİSİ. Boş bırakılan alanlar sayfada görünmez.
@@ -723,20 +728,34 @@ a{ color:inherit; text-decoration:none; }
                    ürün çıkıyor. Ön siparişler bitince sezon kapanıyor.`;
   }
 
-  /* ── Paketler ────────────────────────────────────────────── */
+  /* ── Paketler ──────────────────────────────────────────────
+     Fiyat = kilo fiyatı × kg + sabit kargo. Kargo kutu başına
+     sabit olduğundan kilo başı tutar büyük pakette düşüyor.   */
+  const F = AYARLAR.fiyat;
+  const yuvarlaTL = (n) => Math.round(n / F.yuvarla) * F.yuvarla;
+  const tl = (n) => n.toLocaleString("tr-TR") + " TL";
+
   document.getElementById("paketler").innerHTML = AYARLAR.paketler.map((p) => {
-    const fiyatliMi = AYARLAR.fiyatlariGoster && p.fiyat;
+    const agirlik = `${p.kg} kg`;
+    const tutar = yuvarlaTL(F.kiloFiyati * p.kg + (AYARLAR.kargoDahil ? F.kargoUcreti : 0));
+    const kiloBasi = yuvarlaTL(tutar / p.kg);
+    const fiyatliMi = AYARLAR.fiyatlariGoster;
     const metin = AYARLAR.siparisMesaji
-      .replace("{paket}", p.agirlik)
-      .replace("{fiyat}", fiyatliMi ? ` (${p.fiyat}${AYARLAR.kargoDahil ? ", kargo dahil" : ""})` : "");
+      .replace("{paket}", agirlik)
+      .replace("{fiyat}", fiyatliMi ? ` (${tl(tutar)}${AYARLAR.kargoDahil ? ", kargo dahil" : ""})` : "");
+    // İki ayrı satır: tek satıra sığmayıp ortadan bölünmesi dağınık duruyordu.
+    const altSatir = [
+      `kilosu ${tl(kiloBasi)}`,
+      AYARLAR.kargoDahil ? "kargo dahil" : null
+    ].filter(Boolean).map((s) => `<span class="paketNot">${s}</span>`).join("");
     return `
       <a class="paket${p.populer ? " one" : ""}" href="${wa(metin)}" target="_blank" rel="noopener"
-         aria-label="${kac(p.agirlik)} taze aronya${fiyatliMi ? ", " + kac(p.fiyat) : ""} — ön sipariş">
+         aria-label="${agirlik} taze aronya${fiyatliMi ? ", " + tl(tutar) : ""} — ön sipariş">
         ${p.populer ? '<span class="rozetPopuler">En çok tercih edilen</span>' : ""}
-        <span class="agirlik">${kac(p.agirlik)}</span>
+        <span class="agirlik">${agirlik}</span>
         <span class="paketGovde">
-          ${fiyatliMi ? `<span class="paketFiyat">${kac(p.fiyat)}</span>` : ""}
-          ${fiyatliMi && AYARLAR.kargoDahil ? '<span class="paketNot">kargo dahil</span>' : ""}
+          ${fiyatliMi ? `<span class="paketFiyat">${tl(tutar)}</span>` : ""}
+          ${fiyatliMi ? altSatir : ""}
         </span>
         <span class="sor">${waSvg} Ön sipariş</span>
       </a>`;
@@ -745,7 +764,7 @@ a{ color:inherit; text-decoration:none; }
   /* ── Bilmeniz gerekenler ─────────────────────────────────── */
   const bilgiler = [
     ["Sezon", `Hasat: ${AYARLAR.hasatZamani}. Şu an ön sipariş dönemi, sıra numaranız mesajla bildirilir.`],
-    ["Paketleme", "Strafor kutu ve buz aküsüyle, toplandığı gün kargoda. 1–2 günde teslim."],
+    ["Paketleme", "Strafor kutuda, toplandığı gün kargoda. 1–2 günde teslim."],
     ["Kargo", "Fiyatlara dahil, Türkiye'nin her yerine."],
     ["Garanti", "Ürün bozuk ulaşırsa fotoğrafını gönderin; yenisini yollarız ya da ücretini iade ederiz."],
     ["Ödeme", "Kargoya vermeden önce havale/EFT."],
@@ -759,7 +778,7 @@ a{ color:inherit; text-decoration:none; }
     ["Ne zaman gönderiyorsunuz?",
      `Hasat ${AYARLAR.hasatZamani} başlıyor. Ön siparişler geliş sırasına göre, meyvenin toplandığı gün kargoya veriliyor. Sıranız geldiğinde size mesaj atıyoruz.`],
     ["Kargoda bozulur mu?",
-     "Strafor kutu ve buz aküsüyle gönderiyoruz, teslimat 1–2 gün sürüyor. Yine de bozuk ulaşırsa fotoğrafını gönderin; yenisini yollarız ya da ücretini iade ederiz."],
+     "Meyveyi topladığımız gün, strafor kutuda kargoya veriyoruz; teslimat 1–2 gün sürüyor. Yine de bozuk ulaşırsa fotoğrafını gönderin; yenisini yollarız ya da ücretini iade ederiz."],
     ["Ne kadar dayanır?",
      "Buzdolabında (+4 °C) birkaç hafta durur. Yıkayıp süzdükten sonra poşetleyip dondurursanız kış boyu kullanabilirsiniz; donmuş aronyanın burukluğu da azalır."],
     ["İlaç kullanıyor musunuz?",
