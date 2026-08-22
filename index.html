@@ -33,14 +33,17 @@ const AYARLAR = {
   instagram: "",
 
   /* ── FİYAT ────────────────────────────────────────────────────
-     Paket fiyatları elle yazılmıyor, buradan hesaplanıyor:
-         paket fiyatı = kiloFiyati × kg + kargoUcreti
-     Kargo kutu başına sabit olduğu için kilo başı fiyat büyük
-     pakette kendiliğinden düşüyor — merdiven bozulmuyor.        */
+     Paket fiyatı = o pakete ait kilo fiyatı × kg. Fiyatlara kargo
+     dahildir. Kural: her basamakta kilo fiyatı bir öncekinden en
+     az %5 düşük olsun — yoksa büyük paketi almanın anlamı kalmaz.
+
+     ⚠️ Kargo kutu başına ~sabit olduğu için asıl marj 1 kg pakette
+     en dar. Kargo maliyetini öğrenince önce 1 kg satırını gözden
+     geçirin: 350 TL'den kargo çıkınca elinize kalan tutar, toptan
+     taban fiyatının üstünde mi?                                   */
   fiyat: {
-    kiloFiyati:  350,   // aronyanın kilo fiyatı (TL)
-    kargoUcreti: 150,   // ⚠️ TAHMİN — strafor kutu + kargo. Şubeden öğrenip güncelleyin.
-    yuvarla:      10    // fiyatlar bu katsayıya yuvarlanır
+    kiloFiyatlari: { 1: 350, 2: 330, 3: 310, 5: 290 },
+    yuvarla: 10   // fiyatlar bu katsayıya yuvarlanır
   },
   fiyatlariGoster: true,
   kargoDahil: true,
@@ -737,7 +740,7 @@ a{ color:inherit; text-decoration:none; }
 
   document.getElementById("paketler").innerHTML = AYARLAR.paketler.map((p) => {
     const agirlik = `${p.kg} kg`;
-    const tutar = yuvarlaTL(F.kiloFiyati * p.kg + (AYARLAR.kargoDahil ? F.kargoUcreti : 0));
+    const tutar = yuvarlaTL((F.kiloFiyatlari[p.kg] ?? 0) * p.kg);
     const kiloBasi = yuvarlaTL(tutar / p.kg);
     const fiyatliMi = AYARLAR.fiyatlariGoster;
     const metin = AYARLAR.siparisMesaji
