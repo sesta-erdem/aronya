@@ -8,3 +8,6 @@ _ozel/
 
 # Sistem dosyaları
 .DS_Store
+
+# Instagram gorselleri (siteye ait degil)
+instagram/
